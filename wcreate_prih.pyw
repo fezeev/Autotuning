@@ -11,9 +11,9 @@ class ChooseFromTree(wx.TreeCtrl):
     def __init__(self, parent, rawTree):
         wx.TreeCtrl.__init__(self, parent, -1, (0, 180), (490, 290))
         
-        rootID = self.AddRoot("", data = wx.TreeItemData(rawPartTree[0]))
+        rootID = self.AddRoot("", data = wx.TreeItemData(rawTree[0]))
         ids = {0: rootID}
-        for raw in rawPartTree[1:]:
+        for raw in rawTree[1:]:
             item = self.AppendItem(ids[raw[2]], raw[1], data = wx.TreeItemData(raw))
             ids[raw[0]] = item
         self.Expand(rootID)
@@ -25,47 +25,14 @@ class ChooseFromTree(wx.TreeCtrl):
         parent = self.GetParent()
         parent.selectedData = rawData
     
-class PostList(wx.TreeCtrl):
-    def __init__(self, parent, rawPostList):
-        wx.TreeCtrl.__init__(self, parent, -1, (0, 180), (490, 290))
-        
-        rootID = self.AddRoot("", data = wx.TreeItemData(rawPostList[0]))
-        for raw in rawPostList[1:]:
-            item = self.AppendItem(rootID, raw[1], data = wx.TreeItemData(raw))
-        self.Expand(rootID)
-
-        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.TreeSelChanged, self)
-
-    def TreeSelChanged(self, evt):
-        rawData = self.GetPyData(evt.GetItem())
-        parent = self.GetParent()
-        parent.selectedPost = rawData
-    
-class FolderTree(wx.TreeCtrl):
-    def __init__(self, parent, rawPartTree):
-        wx.TreeCtrl.__init__(self, parent, -1, (0, 180), (490, 290))
-        
-        rootID = self.AddRoot("", data = wx.TreeItemData(rawPartTree[0]))
-        ids = {0: rootID}
-        for raw in rawPartTree[1:]:
-            item = self.AppendItem(ids[raw[2]], raw[1], data = wx.TreeItemData(raw))
-            ids[raw[0]] = item
-        self.Expand(rootID)
-
-        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.TreeSelChanged, self)
-
-    def TreeSelChanged(self, evt):
-        rawData = self.GetPyData(evt.GetItem())
-        parent = self.GetParent()
-        parent.selectedFolder = rawData
-        
+       
 class PostListDlg(wx.Dialog):
     def __init__(self, rawPostList):
         wx.Dialog.__init__(self, None, -1, "Выберите поставщика")
         self.selectedPost = "jhgkjhfvkhv"
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        tree = PostList(self, rawPostList)
+        tree = ChooseFromTree(self, rawPostList)
         box = wx.BoxSizer(wx.HORIZONTAL)
         box.Add(tree, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
@@ -87,7 +54,7 @@ class PostListDlg(wx.Dialog):
         sizer.Fit(self)
 
     def getResult(self):
-        return self.selectedPost
+        return self.selectedData
 
 class PartTreeDlg(wx.Dialog):
     def __init__(self, rawPartTree):
@@ -98,7 +65,7 @@ class PartTreeDlg(wx.Dialog):
         # contents
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        tree = FolderTree(self, rawPartTree)
+        tree = ChooseFromTree(self, rawPartTree)
         box = wx.BoxSizer(wx.HORIZONTAL)
         box.Add(tree, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
@@ -120,7 +87,7 @@ class PartTreeDlg(wx.Dialog):
         sizer.Fit(self)
 
     def getResult(self):
-        return self.selectedFolder
+        return self.selectedData
     
         
 class MainFrame(wx.Frame):
@@ -268,7 +235,7 @@ class appData():
         return result
     def getAllPostav(self):
         cur = self.__db.cursor()
-        cur.execute("select id, nameshort from contragent")
+        cur.execute("select id, nameshort, 0 from contragent")
         result = cur.fetchall()
         return result
 
@@ -489,7 +456,7 @@ class appData():
 
 def main():
     app = myApp()
-    app.RedirectStdio('err.log')
+    #app.RedirectStdio('err.log')
     print("==Last start begins here==")
     app.MainLoop()
 
