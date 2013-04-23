@@ -25,13 +25,12 @@ class ChooseFromTree(wx.TreeCtrl):
         parent = self.GetParent()
         parent.selectedData = rawData
     
-       
-class PostListDlg(wx.Dialog):
-    def __init__(self, rawPostList):
-        wx.Dialog.__init__(self, None, -1, "Выберите поставщика")
+class ChooseFromTreeDlg(wx.Dialog):
+    def __init__(self, rawTree, title):
+        wx.Dialog.__init__(self, None, -1, title)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        tree = ChooseFromTree(self, rawPostList)
+        tree = ChooseFromTree(self, rawTree)
         box = wx.BoxSizer(wx.HORIZONTAL)
         box.Add(tree, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
@@ -52,34 +51,7 @@ class PostListDlg(wx.Dialog):
 
     def getResult(self):
         return self.selectedData
-
-class PartTreeDlg(wx.Dialog):
-    def __init__(self, rawPartTree):
-        wx.Dialog.__init__(self, None, -1, "Выберите папку")
-
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        tree = ChooseFromTree(self, rawPartTree)
-        box = wx.BoxSizer(wx.HORIZONTAL)
-        box.Add(tree, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
-        sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
-
-        btnsizer = wx.StdDialogButtonSizer()
-        btn = wx.Button(self, wx.ID_OK)
-        btn.SetDefault()
-        btnsizer.AddButton(btn)
-
-        btn = wx.Button(self, wx.ID_CANCEL)
-        btnsizer.AddButton(btn)
-        btnsizer.Realize()
-
-        sizer.Add(btnsizer, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
-
-        self.SetSizer(sizer)
-        sizer.Fit(self)
-
-    def getResult(self):
-        return self.selectedData
-    
+ 
         
 class MainFrame(wx.Frame):
     def __init__(self, v):
@@ -111,9 +83,8 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.Run, bm)
 
     def ChoosePostav(self, evt):
-        #print("choose postav")
         PostList = self.v.getAllPostav()
-        pDlg = PostListDlg(PostList)
+        pDlg = ChooseFromTreeDlg(PostList, "Выберите поставщика")
         if pDlg.ShowModal() == wx.ID_OK:
             self.v.setPostav(pDlg.getResult())
             self.textPostav.SetLabel(self.v.getPostav().getName())
@@ -122,7 +93,7 @@ class MainFrame(wx.Frame):
 
     def ChoosePartFolder(self, evt):
         FoldersTree = self.v.getAllPartFolders()
-        ptDlg = PartTreeDlg(FoldersTree)
+        ptDlg = ChooseFromTreeDlg(FoldersTree, "Выберите папку")
         if ptDlg.ShowModal() == wx.ID_OK:
             self.v.setPartFolder(ptDlg.getResult())
             self.textPartFolder.SetLabel(self.v.getPartFolder().getName())
