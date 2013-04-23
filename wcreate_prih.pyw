@@ -128,29 +128,31 @@ class myApp(wx.App):
         self.SetTopWindow(view)
         return True
 
-# TODO delete codedupe
-class PartFolder():
+class NameWithID():
     def __init__(self):
         self.ID = 0
+        self.Name = u"<Не выбрано>"
+    def getID(self):
+        return self.ID
+    def getName(self):
+        return self.Name
+    def setAll(self, raw):
+        self.ID = raw[0]
+        self.Name = raw[1]
+
+class PartFolder(NameWithID):
+    def __init__(self):
+        NameWithID.__init__(self)
         self.Name = u"<Не выбрана>"
-    def getID(self):
-        return self.ID
-    def getName(self):
-        return self.Name
     def setFolder(self, raw):
-        self.ID = raw[0]
-        self.Name = raw[1]
-class Postav():
+        self.setAll(raw)
+        
+class Postav(NameWithID):
     def __init__(self):
-        self.ID = 0
+        NameWithID.__init__(self)
         self.Name = u"<Не выбран>"
-    def getID(self):
-        return self.ID
-    def getName(self):
-        return self.Name
     def setPostav(self, raw):
-        self.ID = raw[0]
-        self.Name = raw[1]
+        self.setAll(raw)
 
 class appData():
     def __init__(self):
