@@ -29,17 +29,14 @@ class ChooseFromTree(wx.TreeCtrl):
 class PostListDlg(wx.Dialog):
     def __init__(self, rawPostList):
         wx.Dialog.__init__(self, None, -1, "Выберите поставщика")
-        self.selectedPost = "jhgkjhfvkhv"
-        sizer = wx.BoxSizer(wx.VERTICAL)
 
+        sizer = wx.BoxSizer(wx.VERTICAL)
         tree = ChooseFromTree(self, rawPostList)
         box = wx.BoxSizer(wx.HORIZONTAL)
         box.Add(tree, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
 
-        
         btnsizer = wx.StdDialogButtonSizer()
-        
         btn = wx.Button(self, wx.ID_OK)
         btn.SetDefault()
         btnsizer.AddButton(btn)
@@ -59,20 +56,14 @@ class PostListDlg(wx.Dialog):
 class PartTreeDlg(wx.Dialog):
     def __init__(self, rawPartTree):
         wx.Dialog.__init__(self, None, -1, "Выберите папку")
-        self.selectedFolder = u"<Не выбрана>"
 
-        # Now continue with the normal construction of the dialog
-        # contents
         sizer = wx.BoxSizer(wx.VERTICAL)
-
         tree = ChooseFromTree(self, rawPartTree)
         box = wx.BoxSizer(wx.HORIZONTAL)
         box.Add(tree, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         sizer.Add(box, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
 
-        
         btnsizer = wx.StdDialogButtonSizer()
-        
         btn = wx.Button(self, wx.ID_OK)
         btn.SetDefault()
         btnsizer.AddButton(btn)
