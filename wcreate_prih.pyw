@@ -199,7 +199,7 @@ class appData():
         return result
     def getAllPostav(self):
         cur = self.__db.cursor()
-        cur.execute("select id, nameshort, 0 from contragent")
+        cur.execute("select id, nameshort, 0 from contragent") # TODO добавить фильтр только на поставщиков
         result = cur.fetchall()
         return result
 
