@@ -56,31 +56,38 @@ class ChooseFromTreeDlg(wx.Dialog):
 class MainFrame(wx.Frame):
     def __init__(self, v):
         self.v = v
-        
         wx.Frame.__init__(self, None, -1, "Загрузка приходов", (10, 10), (500, 500))
+
+        self.__set_properties()
+        self.__do_layout()
+
+    def __set_properties(self):
         panel = wx.Panel(self, -1)
 
-        csvText = wx.StaticText(panel, -1, "Выберите файл с данными", (0,0))
-        b = wx.Button(panel, -1, "csv", (200, 0))
-        self.Bind(wx.EVT_BUTTON, self.ChooseCSV, b)
+        self.txt_csv = wx.StaticText(panel, -1, "Выберите файл с данными", (0,0))
+        self.btn_csv = wx.Button(panel, -1, "csv", (200, 0))
+        self.Bind(wx.EVT_BUTTON, self.ChooseCSV, self.btn_csv)
 
-        csvFilePathText = wx.StaticText(panel, -1, "Выбран файл с данными: ", (0, 30))
+        self.txt_csvFilePathText = wx.StaticText(panel, -1, "Выбран файл с данными: ", (0, 30))
         self.csvFilePath = wx.StaticText(panel, -1, self.v.getPathCSV(), (0, 60))
 
-        txt = wx.StaticText(panel, -1, "Путь к базе данных: "+self.v.getPathDB(), (0, 90))
+        self.txt_DBPath = wx.StaticText(panel, -1, "Путь к базе данных: "+self.v.getPathDB(), (0, 90))
 
-        txt = wx.StaticText(panel, -1, "Папка в каталоге товаров:", (0, 120))
-        bp = wx.Button(panel, -1, "fld", (200, 120))
-        self.Bind(wx.EVT_BUTTON, self.ChoosePartFolder, bp)
+        self.txt_Folder = wx.StaticText(panel, -1, "Папка в каталоге товаров:", (0, 120))
+        self.btn_Folder = wx.Button(panel, -1, "fld", (200, 120))
+        self.Bind(wx.EVT_BUTTON, self.ChoosePartFolder, self.btn_Folder)
         self.textPartFolder = wx.StaticText(panel, 1, self.v.getPartFolder().getName(), (0, 150))
 
-        txt = wx.StaticText(panel, -1, "Поставщик:", (0, 180))
-        bs = wx.Button(panel, -1, "post", (200, 180))
-        self.Bind(wx.EVT_BUTTON, self.ChoosePostav, bs)
+        self.txt_Suppl = wx.StaticText(panel, -1, "Поставщик:", (0, 180))
+        self.btn_Suppl = wx.Button(panel, -1, "post", (200, 180))
+        self.Bind(wx.EVT_BUTTON, self.ChoosePostav, self.btn_Suppl)
         self.textPostav = wx.StaticText(panel, -1, self.v.getPostav().getName(), (0, 210))
 
-        bm = wx.Button(panel, -1, "Загрузить", (200, 240))
-        self.Bind(wx.EVT_BUTTON, self.Run, bm)
+        self.btn_Run = wx.Button(panel, -1, "Загрузить", (200, 240))
+        self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
+
+    def __do_layout(self):
+        pass
 
     def ChoosePostav(self, evt):
         PostList = self.v.getAllPostav()
