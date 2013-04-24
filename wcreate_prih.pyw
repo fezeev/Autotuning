@@ -65,7 +65,8 @@ class MainFrame(wx.Frame):
     def __set_properties(self):
         self.panel = wx.Panel(self, -1)
 
-        self.txt_Header = wx.StaticText(self.panel, -1, "Загрузка приходов в АвтоСервис")
+        self.txt_Header = wx.StaticText(self.panel, -1, "Загрузка приходов в АвтоСервис", style = wx.ALIGN_CENTRE)
+        self.txt_Header.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL))
 
         self.txt_csv = wx.StaticText(self.panel, -1, "Выберите файл с данными", (0,0))
         self.btn_csv = wx.Button(self.panel, -1, "csv", (200, 0))
@@ -94,7 +95,7 @@ class MainFrame(wx.Frame):
 
         title = wx.BoxSizer(wx.HORIZONTAL)
         title.Add(self.txt_Header, 1)
-        sizer.Add(title)
+        sizer.Add(title, 0, wx.EXPAND)
 
         csv = wx.BoxSizer(wx.HORIZONTAL)
         csv.Add(self.txt_csv)
