@@ -9,32 +9,6 @@ import fdb, os, os.path, codecs
 def Float(s):
     return float(s.replace(",", "."))
 
-def ThreePointBMP():
-    # make a custom bitmap showing "..."
-    bw, bh = 14, 16
-    bmp = wx.EmptyBitmap(bw,bh)
-    dc = wx.MemoryDC(bmp)
-
-    # clear to a specific background colour
-    bgcolor = wx.Colour(255,254,255)
-    dc.SetBackground(wx.Brush(bgcolor))
-    dc.Clear()
-
-    # draw the label onto the bitmap
-    label = "..."
-    font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-    font.SetWeight(wx.FONTWEIGHT_BOLD)
-    dc.SetFont(font)
-    tw,th = dc.GetTextExtent(label)
-    dc.DrawText(label, (bw-tw)/2, (bw-tw)/2)
-    del dc
-
-    # now apply a mask using the bgcolor
-    bmp.SetMaskColour(bgcolor)
-
-    return bmp
-
-
 class ChooseFromTree(wx.TreeCtrl):
     def __init__(self, parent, rawTree):
         wx.TreeCtrl.__init__(self, parent, -1, (0, 180), (490, 290))
