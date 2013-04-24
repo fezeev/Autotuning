@@ -58,27 +58,28 @@ class MainFrame(wx.Frame):
         self.v = v
         
         wx.Frame.__init__(self, None, -1, "Загрузка приходов", (10, 10), (500, 500))
+        panel = wx.Panel(self, -1)
 
-        csvText = wx.StaticText(self, -1, "Выберите файл с данными", (0,0))
-        b = wx.Button(self, -1, "csv", (200, 0))
+        csvText = wx.StaticText(panel, -1, "Выберите файл с данными", (0,0))
+        b = wx.Button(panel, -1, "csv", (200, 0))
         self.Bind(wx.EVT_BUTTON, self.ChooseCSV, b)
 
-        csvFilePathText = wx.StaticText(self, -1, "Выбран файл с данными: ", (0, 30))
-        self.csvFilePath = wx.StaticText(self, -1, self.v.getPathCSV(), (0, 60))
+        csvFilePathText = wx.StaticText(panel, -1, "Выбран файл с данными: ", (0, 30))
+        self.csvFilePath = wx.StaticText(panel, -1, self.v.getPathCSV(), (0, 60))
 
-        txt = wx.StaticText(self, -1, "Путь к базе данных: "+self.v.getPathDB(), (0, 90))
+        txt = wx.StaticText(panel, -1, "Путь к базе данных: "+self.v.getPathDB(), (0, 90))
 
-        txt = wx.StaticText(self, -1, "Папка в каталоге товаров:", (0, 120))
-        bp = wx.Button(self, -1, "fld", (200, 120))
+        txt = wx.StaticText(panel, -1, "Папка в каталоге товаров:", (0, 120))
+        bp = wx.Button(panel, -1, "fld", (200, 120))
         self.Bind(wx.EVT_BUTTON, self.ChoosePartFolder, bp)
-        self.textPartFolder = wx.StaticText(self, 1, self.v.getPartFolder().getName(), (0, 150))
+        self.textPartFolder = wx.StaticText(panel, 1, self.v.getPartFolder().getName(), (0, 150))
 
-        txt = wx.StaticText(self, -1, "Поставщик:", (0, 180))
-        bs = wx.Button(self, -1, "post", (200, 180))
+        txt = wx.StaticText(panel, -1, "Поставщик:", (0, 180))
+        bs = wx.Button(panel, -1, "post", (200, 180))
         self.Bind(wx.EVT_BUTTON, self.ChoosePostav, bs)
-        self.textPostav = wx.StaticText(self, -1, self.v.getPostav().getName(), (0, 210))
+        self.textPostav = wx.StaticText(panel, -1, self.v.getPostav().getName(), (0, 210))
 
-        bm = wx.Button(self, -1, "Загрузить", (200, 240))
+        bm = wx.Button(panel, -1, "Загрузить", (200, 240))
         self.Bind(wx.EVT_BUTTON, self.Run, bm)
 
     def ChoosePostav(self, evt):
