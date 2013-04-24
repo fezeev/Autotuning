@@ -2,7 +2,6 @@
 # -*- coding: windows-1251 -*-
 
 import wx
-import wx.combo
 import wx.lib.filebrowsebutton as filebrowse
 
 import fdb, os, os.path, codecs
@@ -84,7 +83,7 @@ class ChooseFromTreeDlg(wx.Dialog):
 class MainFrame(wx.Frame):
     def __init__(self, v):
         self.v = v
-        wx.Frame.__init__(self, None, -1, "Загрузка приходов", (10, 10), (500, 500))
+        wx.Frame.__init__(self, None, -1, "Загрузка приходов", (10, 10))
 
         self.__set_properties()
         self.__do_layout()
@@ -98,54 +97,56 @@ class MainFrame(wx.Frame):
         self.cvsFBB = filebrowse.FileBrowseButton(self.panel, -1, changeCallback = self.setPathCSV,
                                                   labelText = 'Файл с данными:', buttonText = '...', fileMask = '*.csv')
 
-        self.txt_DBPath = wx.StaticText(self.panel, -1, "Путь к базе данных: "+self.v.getPathDB(), (0, 90))
+        self.txt_DBPath = wx.StaticText(self.panel, -1, "Путь к базе данных: "+self.v.getPathDB())
 
-        self.txt_Folder = wx.StaticText(self.panel, -1, "Папка в каталоге товаров:", (0, 120))
-        self.btn_Folder = wx.Button(self.panel, -1, "fld", (200, 120))
+        self.txt_Folder = wx.StaticText(self.panel, -1, "Папка в каталоге товаров:")
+        self.btn_Folder = wx.Button(self.panel, -1, "...")
         self.Bind(wx.EVT_BUTTON, self.ChoosePartFolder, self.btn_Folder)
-        self.textPartFolder = wx.TextCtrl(self.panel, 1, self.v.getPartFolder().getName(), (0, 150), style= wx.TE_READONLY)
+        self.textPartFolder = wx.TextCtrl(self.panel, 1, self.v.getPartFolder().getName(), style= wx.TE_READONLY)
 
-        self.txt_Suppl = wx.StaticText(self.panel, -1, "Поставщик:", (0, 180))
-        self.btn_Suppl = wx.Button(self.panel, -1, "post", (200, 180))
+        self.txt_Suppl = wx.StaticText(self.panel, -1, "Поставщик:")
+        self.btn_Suppl = wx.Button(self.panel, -1, "...")
         self.Bind(wx.EVT_BUTTON, self.ChoosePostav, self.btn_Suppl)
-        self.textPostav = wx.TextCtrl(self.panel, -1, self.v.getPostav().getName(), (0, 210), style = wx.TE_READONLY)
+        self.textPostav = wx.TextCtrl(self.panel, -1, self.v.getPostav().getName(), style = wx.TE_READONLY)
 
-        self.btn_Run = wx.Button(self.panel, -1, "Загрузить", (200, 240))
+        self.btn_Run = wx.Button(self.panel, -1, "Загрузить")
         self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
 
     def __do_layout(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
 
         title = wx.BoxSizer(wx.HORIZONTAL)
-        title.Add(self.txt_Header, 1)
+        title.Add(self.txt_Header, 1, wx.ALL, 5)
         sizer.Add(title, 0, wx.EXPAND)
 
         csv = wx.BoxSizer(wx.HORIZONTAL)
         csv.Add(self.cvsFBB, 1)
         sizer.Add(csv, 0, wx.EXPAND)
 
-        dbPath = wx.BoxSizer(wx.HORIZONTAL)
-        dbPath.Add(self.txt_DBPath)
-        sizer.Add(dbPath)
-
         pFolder = wx.BoxSizer(wx.HORIZONTAL)
-        pFolder.Add(self.txt_Folder, 0)
-        pFolder.Add(self.textPartFolder, 1)
-        pFolder.Add(self.btn_Folder, 0)
+        pFolder.Add(self.txt_Folder, 0, wx.ALL|wx.ALIGN_CENTER, 3)
+        pFolder.Add(self.textPartFolder, 1, wx.ALL|wx.ALIGN_CENTER, 2)
+        pFolder.Add(self.btn_Folder, 0, wx.ALL|wx.ALIGN_CENTER, 3)
         sizer.Add(pFolder, 0, wx.EXPAND)
 
         suppl = wx.BoxSizer(wx.HORIZONTAL)
-        suppl.Add(self.txt_Suppl, 0)
-        suppl.Add(self.textPostav, 1)
-        suppl.Add(self.btn_Suppl, 0)
+        suppl.Add(self.txt_Suppl, 0, wx.ALL|wx.ALIGN_CENTER, 3)
+        suppl.Add(self.textPostav, 1, wx.ALL|wx.ALIGN_CENTER, 2)
+        suppl.Add(self.btn_Suppl, 0, wx.ALL|wx.ALIGN_CENTER, 3)
         sizer.Add(suppl, 0, wx.EXPAND)
 
+        dbPath = wx.BoxSizer(wx.HORIZONTAL)
+        dbPath.Add(self.txt_DBPath, 1, wx.ALL, 3)
+        sizer.Add(dbPath, 0, wx.EXPAND)
+
         btn = wx.BoxSizer(wx.HORIZONTAL)
-        btn.Add(self.btn_Run)
-        sizer.Add(btn)
+        btn.Add(wx.StaticText(self.panel, -1, ""), 1) # грубый хак, чтобы кнопка была выровнена по правому краю
+        btn.Add(self.btn_Run, 0, wx.ALL, 3)
+        sizer.Add(btn, 0, wx.EXPAND)
 
         self.panel.SetSizer(sizer)
         self.Layout()
+        sizer.Fit(self)
 
     def ChoosePostav(self, evt):
         PostList = self.v.getAllPostav()
