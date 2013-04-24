@@ -80,24 +80,6 @@ class ChooseFromTreeDlg(wx.Dialog):
 
     def getResult(self):
         return self.selectedData
-
-class TreeCtrlComboPopup(wx.combo.ComboPopup):
-    def Init(self):
-        self.rawData = None
-        self.selection = None
-
-    def Create(self, parent):
-        self.tree = wx.TreeCtrl(parent)
-    def GetControl(self):
-        return self.tree
-    def FillData(self, rawTree):
-        self.rawData = rawTree
-        rootID = self.tree.AddRoot("", data = wx.TreeItemData(rawTree[0]))
-        ids = {0: rootID}
-        for raw in rawTree[1:]:
-            item = self.tree.AppendItem(ids[raw[2]], raw[1], data = wx.TreeItemData(raw))
-            ids[raw[0]] = item
-        
         
 class MainFrame(wx.Frame):
     def __init__(self, v):
@@ -128,14 +110,6 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.ChoosePostav, self.btn_Suppl)
         self.textPostav = wx.StaticText(self.panel, -1, self.v.getPostav().getName(), (0, 210))
 
-        self.txt_Postav = wx.StaticText(self.panel, -1, "Поставщик:", (0, 180))
-        self.ccPostav = wx.combo.ComboCtrl(self.panel, style=wx.CB_READONLY)
-        self.ccPostav.SetButtonBitmaps(ThreePointBMP(), True)
-
-        tcp = TreeCtrlComboPopup()
-        self.ccPostav.SetPopupControl(tcp)
-        tcp.FillData(self.v.getAllPostav()) # TODO передавать не данные, а метод, который потом и дёргать в нужный момент для ускорения запуска
-
         self.btn_Run = wx.Button(self.panel, -1, "Загрузить", (200, 240))
         self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
 
@@ -155,21 +129,16 @@ class MainFrame(wx.Frame):
         sizer.Add(dbPath)
 
         pFolder = wx.BoxSizer(wx.HORIZONTAL)
-        pFolder.Add(self.txt_Folder)
-        pFolder.Add(self.btn_Folder)
-        pFolder.Add(self.textPartFolder)
-        sizer.Add(pFolder)
+        pFolder.Add(self.txt_Folder, 0)
+        pFolder.Add(self.textPartFolder, 1)
+        pFolder.Add(self.btn_Folder, 0)
+        sizer.Add(pFolder, 0, wx.EXPAND)
 
         suppl = wx.BoxSizer(wx.HORIZONTAL)
-        suppl.Add(self.txt_Suppl)
-        suppl.Add(self.btn_Suppl)
-        suppl.Add(self.textPostav)
-        sizer.Add(suppl)
-
-        suppl2 = wx.BoxSizer(wx.HORIZONTAL)
-        suppl2.Add(self.txt_Postav, 0)
-        suppl2.Add(self.ccPostav, 1)
-        sizer.Add(suppl2, 0, wx.EXPAND)
+        suppl.Add(self.txt_Suppl, 0)
+        suppl.Add(self.textPostav, 1)
+        suppl.Add(self.btn_Suppl, 0)
+        sizer.Add(suppl, 0, wx.EXPAND)
 
         btn = wx.BoxSizer(wx.HORIZONTAL)
         btn.Add(self.btn_Run)
