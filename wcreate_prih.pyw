@@ -21,7 +21,7 @@ class ChooseFromTree(wx.TreeCtrl):
             ids[raw[0]] = item
         self.Expand(rootID)
 
-        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.TreeSelChanged, self)
+        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.TreeSelChanged)
 
     def TreeSelChanged(self, evt):
         rawData = self.GetPyData(evt.GetItem())
