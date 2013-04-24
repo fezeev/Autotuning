@@ -57,7 +57,7 @@ class MainFrame(wx.Frame):
     def __init__(self, v):
         self.v = v
         
-        wx.Frame.__init__(self, None, -1, "This is a test", (10, 10), (500, 500))
+        wx.Frame.__init__(self, None, -1, "Загрузка приходов", (10, 10), (500, 500))
         self.Show(True)
 
         csvText = wx.StaticText(self, -1, "Выберите файл с данными", (0,0))
