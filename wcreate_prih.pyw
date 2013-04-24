@@ -3,6 +3,8 @@
 
 import wx
 import wx.combo
+import wx.lib.filebrowsebutton as filebrowse
+
 import fdb, os, os.path, codecs
 
 def Float(s):
@@ -68,12 +70,7 @@ class MainFrame(wx.Frame):
         self.txt_Header = wx.StaticText(self.panel, -1, "Загрузка приходов в АвтоСервис", style = wx.ALIGN_CENTER)
         self.txt_Header.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL))
 
-        self.txt_csv = wx.StaticText(self.panel, -1, "Выберите файл с данными", (0,0))
-        self.btn_csv = wx.Button(self.panel, -1, "csv", (200, 0))
-        self.Bind(wx.EVT_BUTTON, self.ChooseCSV, self.btn_csv)
-
-        self.txt_csvFilePathText = wx.StaticText(self.panel, -1, "Выбран файл с данными: ", (0, 30))
-        self.csvFilePath = wx.StaticText(self.panel, -1, self.v.getPathCSV(), (0, 60))
+        self.cvsFBB = filebrowse.FileBrowseButton(self.panel, -1, changeCallback = self.setPathCSV)
 
         self.txt_DBPath = wx.StaticText(self.panel, -1, "Путь к базе данных: "+self.v.getPathDB(), (0, 90))
 
@@ -98,10 +95,7 @@ class MainFrame(wx.Frame):
         sizer.Add(title, 0, wx.EXPAND)
 
         csv = wx.BoxSizer(wx.HORIZONTAL)
-        csv.Add(self.txt_csv)
-        csv.Add(self.btn_csv)
-        csv.Add(self.txt_csvFilePathText)
-        csv.Add(self.csvFilePath)
+        csv.Add(self.cvsFBB)
         sizer.Add(csv)
 
         dbPath = wx.BoxSizer(wx.HORIZONTAL)
@@ -143,21 +137,10 @@ class MainFrame(wx.Frame):
             self.v.setPartFolder(ptDlg.getResult())
             self.textPartFolder.SetLabel(self.v.getPartFolder().getName())
         ptDlg.Destroy()
- 
-    def ChooseCSV(self, evt):
-        dlg = wx.FileDialog(
-            self, message="Choose a file",
-            defaultDir=os.getcwd(), 
-            defaultFile="",
-            wildcard="Comma separated value file (*.csv)|*.csv",
-            style=wx.OPEN
-            )
 
-        if dlg.ShowModal() == wx.ID_OK:
-            self.v.setPathCSV(dlg.GetPaths()[0])
-            self.csvFilePath.SetLabel(self.v.getPathCSV())
-        dlg.Destroy()
-
+    def setPathCSV(self, evt):
+        self.v.setPathCSV(evt.GetString())
+        
     def Run(self, evt):
         if self.v.AllOk():
             num = self.v.Run()
