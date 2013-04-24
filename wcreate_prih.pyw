@@ -76,7 +76,7 @@ class MainFrame(wx.Frame):
         self.txt_Folder = wx.StaticText(self.panel, -1, "Папка в каталоге товаров:")
         self.btn_Folder = wx.Button(self.panel, -1, "...")
         self.Bind(wx.EVT_BUTTON, self.ChoosePartFolder, self.btn_Folder)
-        self.textPartFolder = wx.TextCtrl(self.panel, 1, self.v.getPartFolder().getName(), style= wx.TE_READONLY)
+        self.textPartFolder = wx.TextCtrl(self.panel, 1, self.v.getPartFolder().getName(), style = wx.TE_READONLY)
 
         self.txt_Suppl = wx.StaticText(self.panel, -1, "Поставщик:")
         self.btn_Suppl = wx.Button(self.panel, -1, "...")
@@ -85,6 +85,11 @@ class MainFrame(wx.Frame):
 
         self.btn_Run = wx.Button(self.panel, -1, "Загрузить")
         self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
+
+        self.txt_Store = wx.StaticText(self.panel, -1, "Склад:")
+        self.ctrl_Store = wx.TextCtrl(self.panel, -1, self.v.getStore().getName(), style = wx.TE_READONLY)
+        self.btn_Store = wx.Button(self.panel, -1, "...")
+        self.Bind(wx.EVT_BUTTON, self.ChooseStore, self.btn_Store)
 
     def __do_layout(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -108,6 +113,12 @@ class MainFrame(wx.Frame):
         suppl.Add(self.textPostav, 1, wx.ALL|wx.ALIGN_CENTER, 2)
         suppl.Add(self.btn_Suppl, 0, wx.ALL|wx.ALIGN_CENTER, 3)
         sizer.Add(suppl, 0, wx.EXPAND)
+
+        store = wx.BoxSizer(wx.HORIZONTAL)
+        store.Add(self.txt_Store, 0, wx.ALL|wx.ALIGN_CENTER, 3)
+        store.Add(self.ctrl_Store, 1, wx.ALL|wx.ALIGN_CENTER, 2)
+        store.Add(self.btn_Store, 0, wx.ALL|wx.ALIGN_CENTER, 3)
+        sizer.Add(store, 0, wx.EXPAND)
 
         dbPath = wx.BoxSizer(wx.HORIZONTAL)
         dbPath.Add(self.txt_DBPath, 1, wx.ALL, 3)
@@ -138,6 +149,9 @@ class MainFrame(wx.Frame):
             self.v.setPartFolder(ptDlg.getResult())
             self.textPartFolder.SetLabel(self.v.getPartFolder().getName())
         ptDlg.Destroy()
+
+    def ChooseStore(self, evt):
+        pass
 
     def setPathCSV(self, evt):
         self.v.setPathCSV(evt.GetString())
@@ -184,12 +198,19 @@ class Postav(NameWithID):
     def setPostav(self, raw):
         self.setAll(raw)
 
+class Store(NameWithID):
+    def __init__(self):
+        NameWithID.__init__(self)
+        self.Name = u"<Не выбран>"
+    def setStore(self, raw):
+        self.setAll(raw)
+
 class appData():
     def __init__(self):
         self.__pathDB = os.path.join(os.getcwd(), "..", "Base", "AEnter.gdb")
         self.__pathCSV = ""
         self.__Postav = Postav()
-        self.__Sklad = ""
+        self.__Sklad = Store()
         self.__PartFolder = PartFolder()
         self.__Author = None
 
@@ -209,10 +230,10 @@ class appData():
         return self.__Postav
     def setPostav(self, postData):
         self.__Postav.setPostav(postData)
-    def getSklad(self):
+    def getStore(self):
         return self.__Sklad
-    def setSklad(self, skladID):
-        self.__Sklad = skladID
+    def setStore(self, data):
+        self.__Sklad.setStore(data)
     def getPartFolder(self):
         return self.__PartFolder
     def setPartFolder(self, pfData):
