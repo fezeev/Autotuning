@@ -237,7 +237,7 @@ class appData():
         coeffr, coeffmo, coeffo, coeffs = self.getPriceCoeffitients()
         entry = {
             "ID":         self.getNextID("PART_ID"),
-            "IDPARTTREE": self.getPartFolder().getID(), #51, # TODO - create special folder
+            "IDPARTTREE": self.getPartFolder().getID(), # TODO - create special folder
             "NAME":       rawEntry[4],
             "NAMESHORT":  rawEntry[4][:40],
             "FIRM":       self.getPostav().getID(),   ##########
