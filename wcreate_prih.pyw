@@ -86,10 +86,12 @@ class MainFrame(wx.Frame):
         self.btn_Run = wx.Button(self.panel, -1, "Загрузить")
         self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
 
+        """
         self.txt_Store = wx.StaticText(self.panel, -1, "Склад:")
         self.ctrl_Store = wx.TextCtrl(self.panel, -1, self.v.getStore().getName(), style = wx.TE_READONLY)
         self.btn_Store = wx.Button(self.panel, -1, "...")
         self.Bind(wx.EVT_BUTTON, self.ChooseStore, self.btn_Store)
+        """
 
     def __do_layout(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -114,11 +116,13 @@ class MainFrame(wx.Frame):
         suppl.Add(self.btn_Suppl, 0, wx.ALL|wx.ALIGN_CENTER, 3)
         sizer.Add(suppl, 0, wx.EXPAND)
 
+        """
         store = wx.BoxSizer(wx.HORIZONTAL)
         store.Add(self.txt_Store, 0, wx.ALL|wx.ALIGN_CENTER, 3)
         store.Add(self.ctrl_Store, 1, wx.ALL|wx.ALIGN_CENTER, 2)
         store.Add(self.btn_Store, 0, wx.ALL|wx.ALIGN_CENTER, 3)
         sizer.Add(store, 0, wx.EXPAND)
+        """
 
         dbPath = wx.BoxSizer(wx.HORIZONTAL)
         dbPath.Add(self.txt_DBPath, 1, wx.ALL, 3)
@@ -151,6 +155,13 @@ class MainFrame(wx.Frame):
         ptDlg.Destroy()
 
     def ChooseStore(self, evt):
+        StoreTree = self.v.getAllStores()
+        stDlg = ChooseFromTreeDlg(StoreTree, "Выберите склад")
+        if stDlg.ShowModal() == wx.ID_OK:
+            self.v.setStore(stDlg.getResult())
+            self.ctrl_Store.SetLabel(self.v.getStore().getName())
+        ptDlg.Destroy()
+        
         pass
 
     def setPathCSV(self, evt):
@@ -215,7 +226,6 @@ class appData():
         self.__Author = None
 
         self.weID = 1
-        self.data = "18-MAR-2013" # TODO
         self.DocType = 1
 
         self.__db = fdb.connect(dsn="localhost:"+self.__pathDB, user='SYSDBA', password='masterkey', charset='WIN1251')
@@ -288,10 +298,10 @@ class appData():
         coeffr, coeffmo, coeffo, coeffs = self.getPriceCoeffitients()
         entry = {
             "ID":         self.getNextID("PART_ID"),
-            "IDPARTTREE": self.getPartFolder().getID(), # TODO - create special folder
+            "IDPARTTREE": self.getPartFolder().getID(),
             "NAME":       rawEntry[4],
             "NAMESHORT":  rawEntry[4][:40],
-            "FIRM":       self.getPostav().getID(),   ##########
+            "FIRM":       self.getPostav().getID(),
             "NUMBER":     rawEntry[1],
 
     
@@ -400,7 +410,7 @@ class appData():
         totalSum = float(0)
         for line in lines[1:]:
             rawEntry = line.split(";")
-            self.doclines.append(self.getEntryForDocLine(rawEntry)) # TODO
+            self.doclines.append(self.getEntryForDocLine(rawEntry))
             value = Float(rawEntry[2])
             price = Float(rawEntry[3])
                 
@@ -412,11 +422,10 @@ class appData():
         entry = {
             "ID": self.contragentmoney_ID,
             "IDCONTRAGENTIN": self.weID,
-            "IDCONTRAGENTOUT": self.getPostav().getID(), #ContrID,
-            "IDCONTRAGENT": self.getPostav().getID(), #self.ContrID,
-            "NAMECONTRAGENT": self.getPostav().getName(), #self.ContrName,
+            "IDCONTRAGENTOUT": self.getPostav().getID(),
+            "IDCONTRAGENT": self.getPostav().getID(),
+            "NAMECONTRAGENT": self.getPostav().getName(),
             "IDDOC": self.docheader_ID,
-            "DATA": self.data,
             "MONEY": self.money,
             "DIRECTION": 1,
             "TYPEDOC": -1,
@@ -446,7 +455,6 @@ class appData():
             "IDOPTIONS":      1, 
             "NUMBER":         self.Number, 
             "IDDOCTYPE":      1, 
-            "DATENUMERATION": self.data,
         }
         self.insertSQL("docnumber", entry)
 
