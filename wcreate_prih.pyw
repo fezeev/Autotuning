@@ -194,7 +194,7 @@ class appData():
 
     def getAllPartFolders(self):
         cur = self.__db.cursor()
-        cur.execute("select id,name,parent,treelevel,codegroup from parttree order by treelevel, parent, codegroup")
+        cur.execute("select id,name,parent from parttree order by treelevel, parent, codegroup")
         result = cur.fetchall()
         return result
     def getAllPostav(self):
