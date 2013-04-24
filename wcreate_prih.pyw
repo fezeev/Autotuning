@@ -10,6 +10,32 @@ import fdb, os, os.path, codecs
 def Float(s):
     return float(s.replace(",", "."))
 
+def ThreePointBMP():
+    # make a custom bitmap showing "..."
+    bw, bh = 14, 16
+    bmp = wx.EmptyBitmap(bw,bh)
+    dc = wx.MemoryDC(bmp)
+
+    # clear to a specific background colour
+    bgcolor = wx.Colour(255,254,255)
+    dc.SetBackground(wx.Brush(bgcolor))
+    dc.Clear()
+
+    # draw the label onto the bitmap
+    label = "..."
+    font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+    font.SetWeight(wx.FONTWEIGHT_BOLD)
+    dc.SetFont(font)
+    tw,th = dc.GetTextExtent(label)
+    dc.DrawText(label, (bw-tw)/2, (bw-tw)/2)
+    del dc
+
+    # now apply a mask using the bgcolor
+    bmp.SetMaskColour(bgcolor)
+
+    return bmp
+
+
 class ChooseFromTree(wx.TreeCtrl):
     def __init__(self, parent, rawTree):
         wx.TreeCtrl.__init__(self, parent, -1, (0, 180), (490, 290))
@@ -54,7 +80,24 @@ class ChooseFromTreeDlg(wx.Dialog):
 
     def getResult(self):
         return self.selectedData
- 
+
+class TreeCtrlComboPopup(wx.combo.ComboPopup):
+    def Init(self):
+        self.rawData = None
+        self.selection = None
+
+    def Create(self, parent):
+        self.tree = wx.TreeCtrl(parent)
+    def GetControl(self):
+        return self.tree
+    def FillData(self, rawTree):
+        self.rawData = rawTree
+        rootID = self.tree.AddRoot("", data = wx.TreeItemData(rawTree[0]))
+        ids = {0: rootID}
+        for raw in rawTree[1:]:
+            item = self.tree.AppendItem(ids[raw[2]], raw[1], data = wx.TreeItemData(raw))
+            ids[raw[0]] = item
+        
         
 class MainFrame(wx.Frame):
     def __init__(self, v):
@@ -85,6 +128,14 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.ChoosePostav, self.btn_Suppl)
         self.textPostav = wx.StaticText(self.panel, -1, self.v.getPostav().getName(), (0, 210))
 
+        self.txt_Postav = wx.StaticText(self.panel, -1, "Поставщик:", (0, 180))
+        self.ccPostav = wx.combo.ComboCtrl(self.panel, style=wx.CB_READONLY)
+        self.ccPostav.SetButtonBitmaps(ThreePointBMP(), True)
+
+        tcp = TreeCtrlComboPopup()
+        self.ccPostav.SetPopupControl(tcp)
+        tcp.FillData(self.v.getAllPostav()) # TODO передавать не данные, а метод, который потом и дёргать в нужный момент для ускорения запуска
+
         self.btn_Run = wx.Button(self.panel, -1, "Загрузить", (200, 240))
         self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
 
@@ -114,6 +165,11 @@ class MainFrame(wx.Frame):
         suppl.Add(self.btn_Suppl)
         suppl.Add(self.textPostav)
         sizer.Add(suppl)
+
+        suppl2 = wx.BoxSizer(wx.HORIZONTAL)
+        suppl2.Add(self.txt_Postav, 0)
+        suppl2.Add(self.ccPostav, 1)
+        sizer.Add(suppl2, 0, wx.EXPAND)
 
         btn = wx.BoxSizer(wx.HORIZONTAL)
         btn.Add(self.btn_Run)
