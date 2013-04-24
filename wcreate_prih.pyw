@@ -103,12 +103,12 @@ class MainFrame(wx.Frame):
         self.txt_Folder = wx.StaticText(self.panel, -1, "Папка в каталоге товаров:", (0, 120))
         self.btn_Folder = wx.Button(self.panel, -1, "fld", (200, 120))
         self.Bind(wx.EVT_BUTTON, self.ChoosePartFolder, self.btn_Folder)
-        self.textPartFolder = wx.StaticText(self.panel, 1, self.v.getPartFolder().getName(), (0, 150))
+        self.textPartFolder = wx.TextCtrl(self.panel, 1, self.v.getPartFolder().getName(), (0, 150), style= wx.TE_READONLY)
 
         self.txt_Suppl = wx.StaticText(self.panel, -1, "Поставщик:", (0, 180))
         self.btn_Suppl = wx.Button(self.panel, -1, "post", (200, 180))
         self.Bind(wx.EVT_BUTTON, self.ChoosePostav, self.btn_Suppl)
-        self.textPostav = wx.StaticText(self.panel, -1, self.v.getPostav().getName(), (0, 210))
+        self.textPostav = wx.TextCtrl(self.panel, -1, self.v.getPostav().getName(), (0, 210), style = wx.TE_READONLY)
 
         self.btn_Run = wx.Button(self.panel, -1, "Загрузить", (200, 240))
         self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
