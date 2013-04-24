@@ -95,6 +95,7 @@ class MainFrame(wx.Frame):
 
     def __do_layout(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.SetMinSize((500, 5))
 
         title = wx.BoxSizer(wx.HORIZONTAL)
         title.Add(self.txt_Header, 1, wx.ALL, 5)
@@ -218,7 +219,7 @@ class Store(NameWithID):
 
 class appData():
     def __init__(self):
-        self.__pathDB = os.path.join(os.getcwd(), "..", "Base", "AEnter.gdb")
+        self.__pathDB = os.path.abspath(os.path.join(os.getcwd(), "..", "Base", "AEnter.gdb"))
         self.__pathCSV = ""
         self.__Postav = Postav()
         self.__Sklad = Store()
