@@ -70,7 +70,8 @@ class MainFrame(wx.Frame):
         self.txt_Header = wx.StaticText(self.panel, -1, "Загрузка приходов в АвтоСервис", style = wx.ALIGN_CENTER)
         self.txt_Header.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL))
 
-        self.cvsFBB = filebrowse.FileBrowseButton(self.panel, -1, changeCallback = self.setPathCSV)
+        self.cvsFBB = filebrowse.FileBrowseButton(self.panel, -1, changeCallback = self.setPathCSV,
+                                                  labelText = 'Файл с данными:', buttonText = '...', fileMask = '*.csv')
 
         self.txt_DBPath = wx.StaticText(self.panel, -1, "Путь к базе данных: "+self.v.getPathDB(), (0, 90))
 
@@ -95,8 +96,8 @@ class MainFrame(wx.Frame):
         sizer.Add(title, 0, wx.EXPAND)
 
         csv = wx.BoxSizer(wx.HORIZONTAL)
-        csv.Add(self.cvsFBB)
-        sizer.Add(csv)
+        csv.Add(self.cvsFBB, 1)
+        sizer.Add(csv, 0, wx.EXPAND)
 
         dbPath = wx.BoxSizer(wx.HORIZONTAL)
         dbPath.Add(self.txt_DBPath)
