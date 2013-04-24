@@ -2,6 +2,7 @@
 # -*- coding: windows-1251 -*-
 
 import wx
+import wx.combo
 import fdb, os, os.path, codecs
 
 def Float(s):
@@ -62,32 +63,68 @@ class MainFrame(wx.Frame):
         self.__do_layout()
 
     def __set_properties(self):
-        panel = wx.Panel(self, -1)
+        self.panel = wx.Panel(self, -1)
 
-        self.txt_csv = wx.StaticText(panel, -1, "Выберите файл с данными", (0,0))
-        self.btn_csv = wx.Button(panel, -1, "csv", (200, 0))
+        self.txt_Header = wx.StaticText(self.panel, -1, "Загрузка приходов в АвтоСервис")
+
+        self.txt_csv = wx.StaticText(self.panel, -1, "Выберите файл с данными", (0,0))
+        self.btn_csv = wx.Button(self.panel, -1, "csv", (200, 0))
         self.Bind(wx.EVT_BUTTON, self.ChooseCSV, self.btn_csv)
 
-        self.txt_csvFilePathText = wx.StaticText(panel, -1, "Выбран файл с данными: ", (0, 30))
-        self.csvFilePath = wx.StaticText(panel, -1, self.v.getPathCSV(), (0, 60))
+        self.txt_csvFilePathText = wx.StaticText(self.panel, -1, "Выбран файл с данными: ", (0, 30))
+        self.csvFilePath = wx.StaticText(self.panel, -1, self.v.getPathCSV(), (0, 60))
 
-        self.txt_DBPath = wx.StaticText(panel, -1, "Путь к базе данных: "+self.v.getPathDB(), (0, 90))
+        self.txt_DBPath = wx.StaticText(self.panel, -1, "Путь к базе данных: "+self.v.getPathDB(), (0, 90))
 
-        self.txt_Folder = wx.StaticText(panel, -1, "Папка в каталоге товаров:", (0, 120))
-        self.btn_Folder = wx.Button(panel, -1, "fld", (200, 120))
+        self.txt_Folder = wx.StaticText(self.panel, -1, "Папка в каталоге товаров:", (0, 120))
+        self.btn_Folder = wx.Button(self.panel, -1, "fld", (200, 120))
         self.Bind(wx.EVT_BUTTON, self.ChoosePartFolder, self.btn_Folder)
-        self.textPartFolder = wx.StaticText(panel, 1, self.v.getPartFolder().getName(), (0, 150))
+        self.textPartFolder = wx.StaticText(self.panel, 1, self.v.getPartFolder().getName(), (0, 150))
 
-        self.txt_Suppl = wx.StaticText(panel, -1, "Поставщик:", (0, 180))
-        self.btn_Suppl = wx.Button(panel, -1, "post", (200, 180))
+        self.txt_Suppl = wx.StaticText(self.panel, -1, "Поставщик:", (0, 180))
+        self.btn_Suppl = wx.Button(self.panel, -1, "post", (200, 180))
         self.Bind(wx.EVT_BUTTON, self.ChoosePostav, self.btn_Suppl)
-        self.textPostav = wx.StaticText(panel, -1, self.v.getPostav().getName(), (0, 210))
+        self.textPostav = wx.StaticText(self.panel, -1, self.v.getPostav().getName(), (0, 210))
 
-        self.btn_Run = wx.Button(panel, -1, "Загрузить", (200, 240))
+        self.btn_Run = wx.Button(self.panel, -1, "Загрузить", (200, 240))
         self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
 
     def __do_layout(self):
-        pass
+        sizer = wx.BoxSizer(wx.VERTICAL)
+
+        title = wx.BoxSizer(wx.HORIZONTAL)
+        title.Add(self.txt_Header, 1)
+        sizer.Add(title)
+
+        csv = wx.BoxSizer(wx.HORIZONTAL)
+        csv.Add(self.txt_csv)
+        csv.Add(self.btn_csv)
+        csv.Add(self.txt_csvFilePathText)
+        csv.Add(self.csvFilePath)
+        sizer.Add(csv)
+
+        dbPath = wx.BoxSizer(wx.HORIZONTAL)
+        dbPath.Add(self.txt_DBPath)
+        sizer.Add(dbPath)
+
+        pFolder = wx.BoxSizer(wx.HORIZONTAL)
+        pFolder.Add(self.txt_Folder)
+        pFolder.Add(self.btn_Folder)
+        pFolder.Add(self.textPartFolder)
+        sizer.Add(pFolder)
+
+        suppl = wx.BoxSizer(wx.HORIZONTAL)
+        suppl.Add(self.txt_Suppl)
+        suppl.Add(self.btn_Suppl)
+        suppl.Add(self.textPostav)
+        sizer.Add(suppl)
+
+        btn = wx.BoxSizer(wx.HORIZONTAL)
+        btn.Add(self.btn_Run)
+        sizer.Add(btn)
+
+        self.panel.SetSizer(sizer)
+        self.Layout()
 
     def ChoosePostav(self, evt):
         PostList = self.v.getAllPostav()
