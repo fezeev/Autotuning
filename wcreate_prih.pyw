@@ -58,7 +58,6 @@ class MainFrame(wx.Frame):
         self.v = v
         
         wx.Frame.__init__(self, None, -1, "Загрузка приходов", (10, 10), (500, 500))
-        self.Show(True)
 
         csvText = wx.StaticText(self, -1, "Выберите файл с данными", (0,0))
         b = wx.Button(self, -1, "csv", (200, 0))
@@ -125,6 +124,7 @@ class myApp(wx.App):
     def OnInit(self):
         model = appData()
         view = MainFrame(model)
+        view.Show(True)
         self.SetTopWindow(view)
         return True
 
