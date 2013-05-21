@@ -105,6 +105,7 @@ class MainFrame(wx.Frame):
         self.btn_Store = wx.Button(self.panel, -1, "...")
         self.Bind(wx.EVT_BUTTON, self.ChooseStore, self.btn_Store)
         """
+        #self.StoreCtrl = ChooseFieldCtrl(self.panel, "Склад:", self.v.getStore().getName(), self.ChooseStore)
 
     def __do_layout(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -128,6 +129,7 @@ class MainFrame(wx.Frame):
         store.Add(self.btn_Store, 0, wx.ALL|wx.ALIGN_CENTER, 3)
         sizer.Add(store, 0, wx.EXPAND)
         """
+        #self.StoreCtrl.doLayout(sizer)
 
         dbPath = wx.BoxSizer(wx.HORIZONTAL)
         dbPath.Add(self.txt_DBPath, 1, wx.ALL, 3)
@@ -166,8 +168,6 @@ class MainFrame(wx.Frame):
             self.v.setStore(stDlg.getResult())
             self.ctrl_Store.SetLabel(self.v.getStore().getName())
         ptDlg.Destroy()
-        
-        pass
 
     def setPathCSV(self, evt):
         self.v.setPathCSV(evt.GetString())
