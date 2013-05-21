@@ -144,6 +144,7 @@ class MainFrame(wx.Frame):
         self.Layout()
         sizer.Fit(self)
 
+    # !!! TODO устранить дублирование в методах выбора значения из дерева !!!
     def ChoosePostav(self, evt):
         PostList = self.v.getAllPostav()
         pDlg = ChooseFromTreeDlg(PostList, "Выберите поставщика")
@@ -152,7 +153,6 @@ class MainFrame(wx.Frame):
             self.textPostav.SetLabel(self.v.getPostav().getName())
         pDlg.Destroy()
         
-
     def ChoosePartFolder(self, evt):
         FoldersTree = self.v.getAllPartFolders()
         ptDlg = ChooseFromTreeDlg(FoldersTree, "Выберите папку")
