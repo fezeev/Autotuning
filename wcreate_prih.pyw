@@ -53,7 +53,27 @@ class ChooseFromTreeDlg(wx.Dialog):
 
     def getResult(self):
         return self.selectedData
-        
+
+class ChooseFieldCtrl():
+    def __init__(self, parent, textText, ctrlValue, btnCallBack, btnText = "..."):
+        self.parent = parent
+
+        self.StaticTxt = wx.StaticText(self.parent, -1, textText)
+        self.Button = wx.Button(self.parent, -1, btnText)
+        parent.Bind(wx.EVT_BUTTON, btnCallBack, self.Button)
+        self.txtCtrl = wx.TextCtrl(self.parent, 1, ctrlValue, style = wx.TE_READONLY)
+
+    def doLayout(self, vSizer):
+        hSizer = wx.BoxSizer(wx.HORIZONTAL)
+        hSizer.Add(self.StaticTxt, 0, wx.ALL|wx.ALIGN_CENTER, 3)
+        hSizer.Add(self.txtCtrl, 1, wx.ALL|wx.ALIGN_CENTER, 2)
+        hSizer.Add(self.Button, 0, wx.ALL|wx.ALIGN_CENTER, 3)
+        vSizer.Add(hSizer, 0, wx.EXPAND)
+
+    def SetLabel(self, label):
+        self.txtCtrl.SetLabel(label)
+
+
 class MainFrame(wx.Frame):
     def __init__(self, v):
         self.v = v
@@ -73,15 +93,8 @@ class MainFrame(wx.Frame):
 
         self.txt_DBPath = wx.StaticText(self.panel, -1, "Путь к базе данных: "+self.v.getPathDB())
 
-        self.txt_Folder = wx.StaticText(self.panel, -1, "Папка в каталоге товаров:")
-        self.btn_Folder = wx.Button(self.panel, -1, "...")
-        self.Bind(wx.EVT_BUTTON, self.ChoosePartFolder, self.btn_Folder)
-        self.textPartFolder = wx.TextCtrl(self.panel, 1, self.v.getPartFolder().getName(), style = wx.TE_READONLY)
-
-        self.txt_Suppl = wx.StaticText(self.panel, -1, "Поставщик:")
-        self.btn_Suppl = wx.Button(self.panel, -1, "...")
-        self.Bind(wx.EVT_BUTTON, self.ChoosePostav, self.btn_Suppl)
-        self.textPostav = wx.TextCtrl(self.panel, -1, self.v.getPostav().getName(), style = wx.TE_READONLY)
+        self.FolderCtrl = ChooseFieldCtrl(self.panel, "Папка в каталоге товаров:", self.v.getPartFolder().getName(), self.ChoosePartFolder)
+        self.SupplCtrl = ChooseFieldCtrl(self.panel, "Поставщик:", self.v.getPostav().getName(), self.ChoosePostav)
 
         self.btn_Run = wx.Button(self.panel, -1, "Загрузить")
         self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
@@ -105,17 +118,8 @@ class MainFrame(wx.Frame):
         csv.Add(self.cvsFBB, 1)
         sizer.Add(csv, 0, wx.EXPAND)
 
-        pFolder = wx.BoxSizer(wx.HORIZONTAL)
-        pFolder.Add(self.txt_Folder, 0, wx.ALL|wx.ALIGN_CENTER, 3)
-        pFolder.Add(self.textPartFolder, 1, wx.ALL|wx.ALIGN_CENTER, 2)
-        pFolder.Add(self.btn_Folder, 0, wx.ALL|wx.ALIGN_CENTER, 3)
-        sizer.Add(pFolder, 0, wx.EXPAND)
-
-        suppl = wx.BoxSizer(wx.HORIZONTAL)
-        suppl.Add(self.txt_Suppl, 0, wx.ALL|wx.ALIGN_CENTER, 3)
-        suppl.Add(self.textPostav, 1, wx.ALL|wx.ALIGN_CENTER, 2)
-        suppl.Add(self.btn_Suppl, 0, wx.ALL|wx.ALIGN_CENTER, 3)
-        sizer.Add(suppl, 0, wx.EXPAND)
+        self.FolderCtrl.doLayout(sizer)
+        self.SupplCtrl.doLayout(sizer)
 
         """
         store = wx.BoxSizer(wx.HORIZONTAL)
@@ -152,7 +156,7 @@ class MainFrame(wx.Frame):
         ptDlg = ChooseFromTreeDlg(FoldersTree, "Выберите папку")
         if ptDlg.ShowModal() == wx.ID_OK:
             self.v.setPartFolder(ptDlg.getResult())
-            self.textPartFolder.SetLabel(self.v.getPartFolder().getName())
+            self.FolderCtrl.SetLabel(self.v.getPartFolder().getName())
         ptDlg.Destroy()
 
     def ChooseStore(self, evt):
