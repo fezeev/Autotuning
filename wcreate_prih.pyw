@@ -7,9 +7,6 @@ import wx.lib.filebrowsebutton as filebrowse
 import fdb, os, os.path, codecs
 import model
 
-#def Float(s):
-#    return float(s.replace(",", "."))
-
 class ChooseFromTree(wx.TreeCtrl):
     def __init__(self, parent, rawTree):
         wx.TreeCtrl.__init__(self, parent, -1, (0, 180), (490, 290))
@@ -100,12 +97,6 @@ class MainFrame(wx.Frame):
         self.btn_Run = wx.Button(self.panel, -1, "Загрузить")
         self.Bind(wx.EVT_BUTTON, self.Run, self.btn_Run)
 
-        """
-        self.txt_Store = wx.StaticText(self.panel, -1, "Склад:")
-        self.ctrl_Store = wx.TextCtrl(self.panel, -1, self.v.getStore().getName(), style = wx.TE_READONLY)
-        self.btn_Store = wx.Button(self.panel, -1, "...")
-        self.Bind(wx.EVT_BUTTON, self.ChooseStore, self.btn_Store)
-        """
         #self.StoreCtrl = ChooseFieldCtrl(self.panel, "Склад:", self.v.getStore().getName(), self.ChooseStore)
 
     def __do_layout(self):
@@ -123,13 +114,6 @@ class MainFrame(wx.Frame):
         self.FolderCtrl.doLayout(sizer)
         self.SupplCtrl.doLayout(sizer)
 
-        """
-        store = wx.BoxSizer(wx.HORIZONTAL)
-        store.Add(self.txt_Store, 0, wx.ALL|wx.ALIGN_CENTER, 3)
-        store.Add(self.ctrl_Store, 1, wx.ALL|wx.ALIGN_CENTER, 2)
-        store.Add(self.btn_Store, 0, wx.ALL|wx.ALIGN_CENTER, 3)
-        sizer.Add(store, 0, wx.EXPAND)
-        """
         #self.StoreCtrl.doLayout(sizer)
 
         dbPath = wx.BoxSizer(wx.HORIZONTAL)
