@@ -77,14 +77,19 @@ class MainFrame(wx.Frame):
         self.v = v
         wx.Frame.__init__(self, None, -1, "Загрузка приходов", (10, 10))
 
+        self.DocTypeList = ["Приход", "Расход"]
+        self.SelDocType = self.DocTypeList[0]
+
         self.__set_properties()
         self.__do_layout()
 
     def __set_properties(self):
         self.panel = wx.Panel(self, -1)
 
-        self.txt_Header = wx.StaticText(self.panel, -1, "Загрузка приходов в АвтоСервис", style = wx.ALIGN_CENTER)
+        self.txt_Header = wx.StaticText(self.panel, -1, "Загрузка документов в АвтоСервис", style = wx.ALIGN_CENTER)
         self.txt_Header.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL))
+
+        self.ChooseDocType = wx.RadioBox(self.panel, -1, "Тип документа", choices = self.DocTypeList)
 
         self.cvsFBB = filebrowse.FileBrowseButton(self.panel, -1, changeCallback = self.setPathCSV,
                                                   labelText = 'Файл с данными:', buttonText = '...', fileMask = '*.csv')
@@ -106,6 +111,10 @@ class MainFrame(wx.Frame):
         title = wx.BoxSizer(wx.HORIZONTAL)
         title.Add(self.txt_Header, 1, wx.ALL, 5)
         sizer.Add(title, 0, wx.EXPAND)
+
+        rb = wx.BoxSizer(wx.HORIZONTAL)
+        rb.Add(self.ChooseDocType, 0, wx.ALL, 5)
+        sizer.Add(rb, 0, wx.EXPAND)
 
         csv = wx.BoxSizer(wx.HORIZONTAL)
         csv.Add(self.cvsFBB, 1)
