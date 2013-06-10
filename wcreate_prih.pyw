@@ -104,17 +104,24 @@ class MainFrame(wx.Frame):
 
         #self.StoreCtrl = ChooseFieldCtrl(self.panel, "Склад:", self.v.getStore().getName(), self.ChooseStore)
 
+    def __layout_ctrl(self, ctrl, sizer, expand = 1):
+        h_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        h_sizer.Add(ctrl, expand, wx.ALL, 5)
+        sizer.Add(h_sizer, 0, wx.EXPAND)
+
     def __do_layout(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.SetMinSize((500, 5))
 
-        title = wx.BoxSizer(wx.HORIZONTAL)
-        title.Add(self.txt_Header, 1, wx.ALL, 5)
-        sizer.Add(title, 0, wx.EXPAND)
+        #title = wx.BoxSizer(wx.HORIZONTAL)
+        #title.Add(self.txt_Header, 1, wx.ALL, 5)
+        #sizer.Add(title, 0, wx.EXPAND)
+        self.__layout_ctrl(self.txt_Header, sizer)
 
-        rb = wx.BoxSizer(wx.HORIZONTAL)
-        rb.Add(self.ChooseDocType, 0, wx.ALL, 5)
-        sizer.Add(rb, 0, wx.EXPAND)
+        #rb = wx.BoxSizer(wx.HORIZONTAL)
+        #rb.Add(self.ChooseDocType, 0, wx.ALL, 5)
+        #sizer.Add(rb, 0, wx.EXPAND)
+        self.__layout_ctrl(self.ChooseDocType, sizer, 0)
 
         csv = wx.BoxSizer(wx.HORIZONTAL)
         csv.Add(self.cvsFBB, 1)
