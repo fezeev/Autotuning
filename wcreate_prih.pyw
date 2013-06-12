@@ -71,6 +71,14 @@ class ChooseFieldCtrl():
     def SetLabel(self, label):
         self.txtCtrl.SetLabel(label)
 
+    def SetName(self, name):
+        self.StaticTxt.SetLabel(name)
+        #print("set name")
+        # TODO
+    def SetVisible(self, isVisible):
+        print("set visible")
+        # TODO
+
 
 class MainFrame(wx.Frame):
     def __init__(self, v):
@@ -78,7 +86,6 @@ class MainFrame(wx.Frame):
         wx.Frame.__init__(self, None, -1, "Загрузка приходов", (10, 10))
 
         self.DocTypeList = ["Приход", "Расход"]
-        self.SelDocType = self.DocTypeList[0]
 
         self.__set_properties()
         self.__do_layout()
@@ -90,6 +97,7 @@ class MainFrame(wx.Frame):
         self.txt_Header.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.NORMAL))
 
         self.ChooseDocType = wx.RadioBox(self.panel, -1, "Тип документа", choices = self.DocTypeList)
+        self.Bind(wx.EVT_RADIOBOX, self.OnDocTypeSelection, self.ChooseDocType)
 
         self.cvsFBB = filebrowse.FileBrowseButton(self.panel, -1, changeCallback = self.setPathCSV,
                                                   labelText = 'Файл с данными:', buttonText = '...', fileMask = '*.csv')
@@ -113,14 +121,7 @@ class MainFrame(wx.Frame):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.SetMinSize((500, 5))
 
-        #title = wx.BoxSizer(wx.HORIZONTAL)
-        #title.Add(self.txt_Header, 1, wx.ALL, 5)
-        #sizer.Add(title, 0, wx.EXPAND)
         self.__layout_ctrl(self.txt_Header, sizer)
-
-        #rb = wx.BoxSizer(wx.HORIZONTAL)
-        #rb.Add(self.ChooseDocType, 0, wx.ALL, 5)
-        #sizer.Add(rb, 0, wx.EXPAND)
         self.__layout_ctrl(self.ChooseDocType, sizer, 0)
 
         csv = wx.BoxSizer(wx.HORIZONTAL)
@@ -129,7 +130,6 @@ class MainFrame(wx.Frame):
 
         self.FolderCtrl.doLayout(sizer)
         self.SupplCtrl.doLayout(sizer)
-
         #self.StoreCtrl.doLayout(sizer)
 
         dbPath = wx.BoxSizer(wx.HORIZONTAL)
@@ -144,6 +144,14 @@ class MainFrame(wx.Frame):
         self.panel.SetSizer(sizer)
         self.Layout()
         sizer.Fit(self)
+
+    def OnDocTypeSelection(self, evt):
+        if self.ChooseDocType.GetSelection() == 0:
+            self.SupplCtrl.SetName("Поставщик:")
+            self.FolderCtrl.SetVisible(False)
+        elif self.ChooseDocType.GetSelection() == 1:
+            self.SupplCtrl.SetName("Покупатель:")
+            self.FolderCtrl.SetVisible(True)
 
     # !!! TODO устранить дублирование в методах выбора значения из дерева !!!
     def ChoosePostav(self, evt):
@@ -174,12 +182,19 @@ class MainFrame(wx.Frame):
         self.v.setPathCSV(evt.GetString())
         
     def Run(self, evt):
+        #print(self.ChooseDocType.GetSelection())
+        #print(self.ChooseDocType.GetStringSelection())
+        
         if self.v.AllOk():
-            num = self.v.Run()
+            if self.ChooseDocType.GetSelection() == 0:
+                num = self.v.LoadIncome()
+            elif self.ChooseDocType.GetSelection() == 1:
+                num = self.v.LoadOutcome()
 
             dlg = wx.MessageDialog(self, 'Загружена накладная номер '+str(num), 'All done!', wx.OK | wx.ICON_INFORMATION)
             dlg.ShowModal()
             dlg.Destroy()
+        
         
 class myApp(wx.App):
     def OnInit(self):

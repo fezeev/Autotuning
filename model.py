@@ -288,7 +288,7 @@ class appData():
 
     def AllOk(self):
         return True # TODO
-    def Run(self):
+    def LoadIncome(self):
         #pass
         self.read_file()
         
@@ -298,3 +298,5 @@ class appData():
         self.update_docparts()
 
         return self.Number
+    def LoadOutcome(self):
+        print("TODO")
